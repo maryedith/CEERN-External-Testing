@@ -3,11 +3,6 @@
 class CEERNUnitTestingSource extends UnitTestCase {
 	
   private $ceen_location = 'http://api.resourcecommons.org/services/rest';
-  private $public_key = 'a545766537012063cce4aafef3e137f2';
-  private $private_key = 'e4c746388aeceed2338474a56438bc7e';
-//  private $public_key = '2df967ab004f241e9c10f03b7216396e';
-//  private $private_key = '5397c5fc8715349f34dd71027b19422f';
-  private $server_uuid = '69d6c734-a4bb-11df-8932-4040e8acc39d';
 
   function __construct() {
 	 $this->ceenRU = new CEERNResourceUtil();

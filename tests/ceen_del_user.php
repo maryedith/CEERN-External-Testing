@@ -8,9 +8,9 @@ $ceen_location = 'http://api.resourcecommons.org/services/rest/';
 $public_key = 'a545766537012063cce4aafef3e137f2';
 $private_key = 'e4c746388aeceed2338474a56438bc7e';
 
-$url = $ceen_location.'user.php/1a2c932c-ace4-11df-8932-4040e8acc39d';
+$url = $ceen_location.'user/0c29bdcc-bf59-11df-8932-4040e8acc39d.php';
 $nonce = uniqid(mt_rand());
-$timestamp = time();
+$timestamp = time() + (60 * 60 * 4);
 $resource_name = 'user_resource.delete';
 
 $hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
@@ -27,9 +27,15 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_HEADER, 0);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+  'Content-type: application/vnd.php.serialized',
+  'Accept: application/vnd.php.serialized',
+));
 
 // grab URL and pass it to the browser
-$response = curl_exec($ch);
+$response = unserialize(curl_exec($ch));  
 
 // close cURL resource, and free up system resources
 curl_close($ch);

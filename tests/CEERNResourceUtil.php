@@ -6,7 +6,7 @@
 
 class CEERNResourceUtil {
 	
-  private $ceen_location = 'http://api.resourcecommons.org/services/rest';
+//  private $ceen_location = 'http://api.resourcecommons.org/services/rest';
   private $public_key = 'a545766537012063cce4aafef3e137f2';
   private $private_key = 'e4c746388aeceed2338474a56438bc7e';
 	

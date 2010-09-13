@@ -5,11 +5,11 @@
  */
 
 $resource = array(
-  'first_name' => 'Mary4',
-  'last_name' => 'Last4',
+  'first_name' => 'Mary76',
+  'last_name' => 'Last74',
   'bio' => 'This is a test using the example and only changing the $resource fields.',
   'contact' => array(
-    'mail' => 'mary4@maryedith.com',
+    'mail' => 'mary74@maryedith.com',
   ),
 );
  
@@ -17,7 +17,7 @@ $ceen_location = 'http://api.resourcecommons.org/services/rest/';
 $public_key = 'a545766537012063cce4aafef3e137f2';
 $private_key = 'e4c746388aeceed2338474a56438bc7e';
 $nonce = uniqid(mt_rand());
-$timestamp = time();
+$timestamp = time() + (60 * 60 * 4);
 $resource_name = 'user_resource.create';
 
 $hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
@@ -25,7 +25,7 @@ $hash = hash_hmac("sha256", implode(';', $hash_parameters), $private_key);
 
 $ch = curl_init();
 
-$ceen_posturl = sprintf($ceen_location . 'user.php?hash=%s&timestamp=%d&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
+$ceen_posturl = sprintf($ceen_location . 'user.php?hash=%s&timestamp=%s&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
 
 print $ceen_posturl;
 

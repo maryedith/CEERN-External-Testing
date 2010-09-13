@@ -5,11 +5,11 @@
  */
 
 $resource = array(
-  'title' => 'My Resource',
-  'description' => 'This is my first resource.',
+  'title' => 'My Big Fat Resource',
+  'description' => 'This is my own resource.',
   'type' => array(),
   'time' => array(
-    'start' => '08/22/10 - 12:00 pm',
+    'start' => '09/13/10 - 9:00 am',
 	'end' => '12/31/10 - 12 pm'
   ),
   'prerequisites' => 'My prerequisites',
@@ -23,9 +23,9 @@ $resource = array(
   ),
   'language' => array( 'en' ),
   'contact' => array( 
-	'name' => 'Mary2 Last2',
-	'email' => 'mary2@maryedith.com',
-	'url' => 'http://mary2edith.com',
+	'name' => 'Resource Denizen',
+	'email' => 'denizen@resources.com',
+	'url' => 'http://resources.com',
 	'phone' => '800-777-2222',
   ),
   'grade_levels' => array(),
@@ -33,7 +33,7 @@ $resource = array(
   'participant_type' => array(),
   'links' => array(),
   'photos' => array(),
-  'user' => 'facb1e6e-aa8a-11df-8932-4040e8acc39d',
+  'user' => '77bd63d4-a561-11df-8932-4040e8acc39d',
 	
 );
  
@@ -41,7 +41,7 @@ $ceen_location = 'http://api.resourcecommons.org/services/rest/';
 $public_key = 'a545766537012063cce4aafef3e137f2';
 $private_key = 'e4c746388aeceed2338474a56438bc7e';
 $nonce = uniqid(mt_rand());
-$timestamp = time();
+$timestamp = time() + (60 * 60 * 4);
 $resource_name = 'resource_resource.create';
 
 $hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
@@ -49,7 +49,7 @@ $hash = hash_hmac("sha256", implode(';', $hash_parameters), $private_key);
 
 $ch = curl_init();
 
-$ceen_posturl = sprintf($ceen_location . 'resource.php?hash=%s&timestamp=%d&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
+$ceen_posturl = sprintf($ceen_location . 'resource.php?hash=%s&timestamp=%s&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
 
 print $ceen_posturl;
 
