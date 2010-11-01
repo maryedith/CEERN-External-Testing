@@ -4,14 +4,14 @@
  * Sets all of our variables needed to grab resources.
  */
  
-$ceen_location = 'http://api.resourcecommons.org/services/rest/';
+$ceen_location = 'http://api.resourcecommons.org/services/rest';
 $public_key = '';
 $private_key = '';
 
 $ch = curl_init();
 
 // set URL and other appropriate options
-curl_setopt($ch, CURLOPT_URL, $ceen_location . '/resource.php/?Title=Sample');
+curl_setopt($ch, CURLOPT_URL, $ceen_location . '/resource.php?title=Bigtest');
 curl_setopt($ch, CURLOPT_HEADER, 0);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
@@ -25,7 +25,4 @@ print_r("<pre>");
 print_r( $resources );
 print_r("</pre>");
 
-//foreach ($resources['resources'] as $resource) {
-//  print "<p>" . $resource['title'] . ' - ' . $resource['uuid'] . "</p>\n";
-//}
 

@@ -8,12 +8,12 @@ $ceen_location = 'http://api.resourcecommons.org/services/rest/';
 $public_key = 'a545766537012063cce4aafef3e137f2';
 $private_key = 'e4c746388aeceed2338474a56438bc7e';
 
-$url = $ceen_location.'user/0c29bdcc-bf59-11df-8932-4040e8acc39d.php';
+$url = $ceen_location.'user/5b141a5a-cd72-11df-a638-4040e8acc39d.php';
 $nonce = uniqid(mt_rand());
 $timestamp = time() + (60 * 60 * 4);
 $resource_name = 'user_resource.delete';
 
-$hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
+$hash_parameters = array($timestamp, $public_key, $nonce);
 $hash = hash_hmac("sha256", implode(';', $hash_parameters), $private_key);
 
 $data = NULL;
@@ -44,5 +44,4 @@ print_r("<pre>");
 print_r( $response );
 print_r("</pre>");
 
-// note:  error on unserialize.  returns 1.  user not deleted.
 ?>

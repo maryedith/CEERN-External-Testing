@@ -44,12 +44,12 @@ $nonce = uniqid(mt_rand());
 $timestamp = time() + (60 * 60 * 4);
 $resource_name = 'resource_resource.update';
 
-$hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
+$hash_parameters = array($timestamp, $public_key, $nonce);
 $hash = hash_hmac("sha256", implode(';', $hash_parameters), $private_key);
 
 $ch = curl_init();
 
-$ceen_posturl = sprintf($ceen_location . 'resource/32c94870-bb90-11df-8932-4040e8acc39d.php?hash=%s&timestamp=%s&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
+$ceen_posturl = sprintf($ceen_location. 'resource/9b064e6c-e5d2-11df-9b11-4040e8acc39d.php?hash=%s&timestamp=%s&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
 
 print $ceen_posturl;
 

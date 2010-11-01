@@ -5,8 +5,8 @@
  */
 
 $resource = array(
-  'title' => 'My Big Fat Resource',
-  'description' => 'This is my own resource.',
+  'title' => 'My Bigtest Resource',
+  'description' => 'This is my big test resource.',
   'type' => array(),
   'time' => array(
     'start' => '09/13/10 - 9:00 am',
@@ -34,7 +34,7 @@ $resource = array(
   'links' => array(),
   'photos' => array(),
   'user' => '77bd63d4-a561-11df-8932-4040e8acc39d',
-	
+	// this is Example User
 );
  
 $ceen_location = 'http://api.resourcecommons.org/services/rest/';
@@ -44,11 +44,13 @@ $nonce = uniqid(mt_rand());
 $timestamp = time() + (60 * 60 * 4);
 $resource_name = 'resource_resource.create';
 
-$hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
+$hash_parameters = array($timestamp, $public_key, $nonce);
 $hash = hash_hmac("sha256", implode(';', $hash_parameters), $private_key);
 
 $ch = curl_init();
-
+print_r('<pre>');
+print_r($resource );
+print_r('</pre>');
 $ceen_posturl = sprintf($ceen_location . 'resource.php?hash=%s&timestamp=%s&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
 
 print $ceen_posturl;
@@ -66,12 +68,17 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 ));
 
 // grab URL and pass it to the browser
-$postinfo = unserialize(curl_exec($ch));
+//$postinfo = unserialize(curl_exec($ch));
+$postinfo = curl_exec($ch);
+$post = unserialize( $postinfo );
 
 // close cURL resource, and free up system resources
 curl_close($ch);
+print "\n\nthe result: \n\n";
 print "<pre>";
 print_r($postinfo);
+print_r("<br><br>the ser result:<br><br>");
+print_r($post);
 print "</pre>";
 
 ?>

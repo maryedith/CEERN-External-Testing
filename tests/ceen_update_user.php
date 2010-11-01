@@ -5,8 +5,8 @@
  */
 
 $resource = array(
-    'first_name' => 'Jerry',
-	'last_name' => 'Chameleon',
+    'first_name' => 'Mary',
+	'last_name' => 'Cham0',
     'contact' => array(
       'mail' => 'changed@maryedith.com',
       'alternate_email' => 'chg2@example.com',
@@ -30,12 +30,12 @@ $nonce = uniqid(mt_rand());
 $timestamp = time() + (60 * 60 * 4);
 $resource_name = 'user_resource.update';
 
-$hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
+$hash_parameters = array($timestamp, $public_key, $nonce);
 $hash = hash_hmac("sha256", implode(';', $hash_parameters), $private_key);
 
 $ch = curl_init();
 
-$ceen_posturl = sprintf($ceen_location . 'user/1a2c932c-ace4-11df-8932-4040e8acc39d.php?hash=%s&timestamp=%s&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
+$ceen_posturl = sprintf($ceen_location . 'user/7755e766-cd72-11df-a638-4040e8acc39d.php?hash=%s&timestamp=%s&public_key=%s&nonce=%s', $hash, $timestamp, $public_key, $nonce);
 
 print $ceen_posturl;
 
