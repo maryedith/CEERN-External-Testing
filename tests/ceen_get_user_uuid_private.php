@@ -11,10 +11,10 @@ $nonce = uniqid(mt_rand());
 $timestamp = time() + (60 * 60 * 4);
 $resource_name = 'user_resource.private_info';
 
-$hash_parameters = array($timestamp, $public_key, $nonce, $resource_name);
+$hash_parameters = array($timestamp, $public_key, $nonce);
 $hash = hash_hmac("sha256", implode(';', $hash_parameters), $private_key);
 
-$ceen_posturl = sprintf($ceen_location.'user/0c29bdcc-bf59-11df-8932-4040e8acc39d/private_info.php?hash=%s&public_key=%s&timestamp=%s&nonce=%s', $hash, $public_key, $timestamp, $nonce);
+$ceen_posturl = sprintf($ceen_location.'user/44516d04-cd72-11df-a638-4040e8acc39d/private_info.php?hash=%s&public_key=%s&timestamp=%s&nonce=%s', $hash, $public_key, $timestamp, $nonce);
 
 print $ceen_posturl;
 

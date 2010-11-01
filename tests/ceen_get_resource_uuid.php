@@ -11,7 +11,7 @@ $private_key = '';
 $ch = curl_init();
 
 // set URL and other appropriate options
-curl_setopt($ch, CURLOPT_URL, $ceen_location . '/resource/f8329646-a562-11df-8932-4040e8acc39d.php');
+curl_setopt($ch, CURLOPT_URL, $ceen_location . '/resource/b90e61e0-e5cf-11df-9b11-4040e8acc39d.php');
 curl_setopt($ch, CURLOPT_HEADER, 0);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
@@ -25,4 +25,3 @@ print_r("<pre>");
 print_r( $resources );
 print_r("</pre>");
 
-?>

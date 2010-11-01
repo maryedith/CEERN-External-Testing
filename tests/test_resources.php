@@ -1,13 +1,39 @@
 <?php
 
 class CEERNUnitTesting extends UnitTestCase {
-	
-  private $ceen_location = 'http://api.resourcecommons.org/services/rest';
 
   private $temp_uuid;
+  private $user_uuid;
+  private $ceenRU;
 
   function __construct() {
-	 $this->ceenRU = new CEERNResourceUtil();
+    $this->ceenRU = new CEERNResourceUtil();
+    
+    $user = array(
+      'first_name' => 'Resource'.rand(),
+      'last_name' => 'Tester',
+      'bio' => 'testing...testing...',
+      'contact' => array(
+        'mail' => 'test@test.com',
+        'alternate_email' => 'example2@example.com',
+        'website' => 'http://example.com',
+        'street' => '444 Fourth St',
+        'alternate' => 'Apartment 4',
+        'city' => 'San Francisco',
+        'state' => 'CA',
+        'zip' => '93939',
+        'county' => 'United States',
+      ),
+    );
+    
+    $test_user = $this->ceenRU->CEERNResourceCall('/user.php', 'POST', $user, TRUE, 'user_resource.create', FALSE);
+    $this->user_uuid = $test_user->uuid;
+//	$this->user_uuid = '5be3b3b4-cd72-11df-a638-4040e8acc39d';
+krumo( $this->user_uuid );
+  }
+  
+  function __destruct() {
+    $this->ceenRU->CEERNResourceCall('/reset.php', 'POST', NULL, TRUE);
   }
 
   function setUp() {
@@ -16,6 +42,7 @@ class CEERNUnitTesting extends UnitTestCase {
     /**
      * Add setup functionality here.
      */
+     
   }
   
   function tearDown() {
@@ -26,94 +53,79 @@ class CEERNUnitTesting extends UnitTestCase {
     /**
      * Now, delete the users.
      */
-  
-    parent::tearDown();
+     
   }
 
-  function testCreateResource() {
-	global $temp_uuid;
-	
-	$resource = array(
-	  'title' => 'Resource '.rand(),
-	  'description' => 'This is my first resource.',
-	  'type' => array(),
-	  'time' => array(
-	    'start' => '09/08/10 - 12:00 pm',
-		'end' => '12/31/10 - 12 pm'
-	  ),
-	  'prerequisites' => 'My prerequisites',
-	  'location' => array(
-		'name' => 'My Resource Location',
-		'street' => '100 Main St.',
-		'additional' => '',
-		'city' => 'Anytown',
-		'state' => 'CA',
-		'country' => 'USA',
-	  ),
-	  'language' => array( 'en' ),
-	  'contact' => array( 
-		'name' => 'Mary2 Last2',
-		'email' => 'mary2@maryedith.com',
-		'url' => 'http://mary2edith.com',
-		'phone' => '800-777-2222',
-	  ),
-	  'grade_levels' => array(),
-	  'education_continuum' => array(),
-	  'participant_type' => array(),
-	  'links' => array(),
-	  'photos' => array(),
-	  'user' => 'facb1e6e-aa8a-11df-8932-4040e8acc39d',
-
-	);
+  function testCreateResource() {	
+  	$resource = array(
+  	  'title' => 'Resource '.rand(),
+  	  'description' => 'This is my first resource.',
+  	  'type' => array(),
+  	  'time' => array(
+  	    'start' => '09/08/10 - 12:00 pm',
+  		  'end' => '12/31/10 - 12 pm'
+  	  ),
+  	  'prerequisites' => 'My prerequisites',
+  	  'location' => array(
+  		  'name' => 'My Resource Location',
+  		  'street' => '100 Main St.',
+  		  'additional' => '',
+  		  'city' => 'Anytown',
+  		  'state' => 'CA',
+  		  'country' => 'USA',
+  	  ),
+  	  'language' => array( 'en' ),
+  	  'contact' => array( 
+  		  'name' => 'Mary2 Last2',
+  		  'email' => 'mary2@maryedith.com',
+  		  'url' => 'http://mary2edith.com',
+  		  'phone' => '800-777-2222',
+  	  ),
+  	  'grade_levels' => array(),
+  	  'education_continuum' => array(),
+  	  'participant_type' => array(),
+  	  'links' => array(),
+  	  'photos' => array(),
+  	  'user' => $this->user_uuid,
+  	  'fair_usage' => TRUE,
+  	);
 
     $resource = (object) $resource;
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location . '/resource.php', 'POST', $resource, TRUE, 'resource_resource.create');
+    $data = $this->ceenRU->CEERNResourceCall('/resource.php', 'POST', $resource, TRUE, 'resource_resource.create');
     $this->assertTrue(isset($data->uuid));
-	$temp_uuid = $data->uuid;
-
+    $this->temp_uuid = $data->uuid;
   }
 
   function testGetResources() {  
-
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location . '/resource.php', 'GET', NULL, FALSE, 'resource_resource.index');
-    $this->assertTrue(isset($data->stats));
-//	$this->assertTrue(1==1);
+    $data = $this->ceenRU->CEERNResourceCall('/resource.php', 'GET', NULL, FALSE, 'resource_resource.index');
+    $this->assertTrue($data['stats']['total']>0);
   }
 
-  function testGetResource( $uuid='db44a4fe-bc53-11df-8932-4040e8acc39d') {  
-
-	global $temp_uuid;
-//	$uuid = $temp_uuid;
+  function testGetResource() {  
+    $uuid = $this->temp_uuid;
 	
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location.'/resource'.'/'.$uuid.'.php', 'GET', NULL, FALSE, 'resource_resource.retrieve');
-    $this->assertTrue(isset($data->title));
-//	$this->assertTrue(1==1);
+    $data = $this->ceenRU->CEERNResourceCall('/resource'.'/'.$uuid.'.php', 'GET', NULL, FALSE, 'resource_resource.retrieve');
+    $this->assertTrue(isset($data['title']));
   }
 
-  function testGetResourceTitle( $title='Sample') {  
-    // '/?' or '?' is ok.  9/8/10
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location.'/resource.php'.'?title='.$title, 'GET', NULL, FALSE, 'resource_resource.index');
-//  print $data['resources'][0]['title'];
-//  TODO:  check that $title is Truly matched in each title!
-	$this->assertTrue($data['stats']['total']>0);
-
+  function testGetResourceTitle() {  
+    $data = $this->ceenRU->CEERNResourceCall('/resource.php'.'?title=Resource', 'GET', NULL, FALSE, 'resource_resource.index');
+    $this->assertTrue($data['stats']['total']>0);
   }
 
-  function testUpdateResource( $uuid='32c94870-bb90-11df-8932-4040e8acc39d') {  
+  function testUpdateResource() {  
+  	$uuid = $this->temp_uuid;
 	
-	global $temp_uuid;
-	$uuid = $temp_uuid;
-	
-	$resource = array(
-	    'title' => 'Updated Resource',
-	    'description' => 'describe my updated resource. It is awesome.',
-	    'type' => array(
-	      'Classroom Resources',
-	    ),
-	    'time' => array(
-	      'start' => '09/08/2010 - 4:30pm',
-	      'end' => '12/31/2010 - 6:30pm',
-	    ),
+    $resource = array(
+      'title' => 'Updated Resource',
+      'description' => 'describe my updated resource. It is awesome.',
+      'type' => array(
+        'Classroom Resources',
+      ),
+      'time' => array(
+        'start' => '09/08/2010 - 4:30pm',
+        'end' => '12/31/2010 - 6:30pm',
+      ),
 	    'prerequisites' => 'A description of the prerequisites you need for this resource',
 	    'location' => array (
 	      'name' => 'Location Name',
@@ -150,111 +162,34 @@ class CEERNUnitTesting extends UnitTestCase {
 	    'photos' => array(
 
 	    ),
-	    'user' => 'http://example.com/services/rest/user/[user-uuid]',
+	    'user' => $this->user_uuid,
+	    'fair_usage' => TRUE,
 	  );
-	$resource = (object) $resource;
+    
+    $resource = (object) $resource;
 
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location.'/resource'.'/'.$uuid.'.php', 'PUT', $resource, TRUE, 'resource_resource.update');
-    $this->assertTrue($data==1);
+    $data = $this->ceenRU->CEERNResourceCall('/resource'.'/'.$uuid.'.php', 'PUT', $resource, TRUE, 'resource_resource.update');
+    $this->assertTrue(!empty($data));
 
   }
 
   // this second GET is to view the UPDATED Resource.
-  function testReGetResource( $uuid='f8329646-a562-11df-8932-4040e8acc39d') {  
+  function testReGetResource() {  
+  	$uuid = $this->temp_uuid;
 
-	global $temp_uuid;
-	$uuid = $temp_uuid;
-
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location.'/resource'.'/'.$uuid.'.php', 'GET', NULL, FALSE, 'resource_resource.retrieve');
-    $this->assertTrue(isset($data->title));
-//	$this->assertTrue(1==1);
+    $data = $this->ceenRU->CEERNResourceCall('/resource'.'/'.$uuid.'.php', 'GET', NULL, FALSE, 'resource_resource.retrieve');
+    $this->assertTrue(isset($data['title']));
   }
 
-  function testDeleteResource( $uuid='0af72026-ae3c-11df-8932-4040e8acc39d') {  
-
-	global $temp_uuid;
-    $uuid=$temp_uuid; 
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location.'/resource'.'/'.$uuid.'.php', 'DELETE', NULL, TRUE, 'resource_resource.delete');
+  function testDeleteResource() {  
+    $uuid = $this->temp_uuid; 
+    $data = $this->ceenRU->CEERNResourceCall('/resource'.'/'.$uuid.'.php', 'DELETE', NULL, TRUE, 'resource_resource.delete');
     $this->assertTrue($data==1);
   }
 
   function testGetResourceTypes() {  
-
-    $data = $this->ceenRU->CEERNResourceCall($this->ceen_location . '/resource_types.php', 'GET', NULL, FALSE, 'resource_types_resource.index');
-    $this->assertTrue(isset($data[3]['name'])); //hack
-	//TODO: this should return $data['stats'] as other index functions do.
-	//would prefer to use the following assert:
-	//$this->assertTrue($data['stats']['total']>0);
+    $data = $this->ceenRU->CEERNResourceCall('/resource_types.php', 'GET', NULL, FALSE, 'resource_types_resource.index');
   }
 
-  /**
-   * Helper function to make resource calls to CEERN site.
-   */
-/*  
-  function CEERNResourceCall($url, $method = 'GET', $data = array(), $authenticate = FALSE, $resource_name = '', $output = TRUE) {
-    $nonce = uniqid(mt_rand());
-    $timestamp = time() + (60 * 60 * 4); // Time adjusted for differences. API server is currently GMT -1.
-    
-    $hash_parameters = array($timestamp, $this->public_key, $nonce, $resource_name);
-    $hash = hash_hmac("sha256", implode(';', $hash_parameters), $this->private_key);
-    
-    $ch = curl_init();
-    
-    // if we're authenticating, we need to add info to the end of the query string. (i.e. - http://example.com/resource?test=1&[authinfo])
-    if ($authenticate == TRUE) {
-      if(!strpos($url, '?')) {
-        $url .= '?';
-      }
-      
-      $url = $url . implode('&', array(
-        'hash=' . $hash,
-        'public_key=' . $this->public_key,
-        'timestamp=' . $timestamp,
-        'nonce=' . $nonce,
-      ));
-    }
-    
-    // set URL and other appropriate options
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-      'Content-type: application/vnd.php.serialized',
-      'Accept: application/vnd.php.serialized',
-    ));
-    
-    // method switching
-    switch (strtoupper($method)) {
-      case 'POST':
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, serialize($data));
-      break;
-      case 'PUT':
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, serialize($data));
-      break;
-      case 'DELETE':
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-      break;
-      case 'GET':
-      default:
-      break;
-    }
-    
-    // grab URL and pass it to the browser
-    $return = unserialize(curl_exec($ch));
-    
-    // close cURL resource, and free up system resources
-    curl_close($ch);
-    
-    if ($output == TRUE) {
-      print "<br><b>Data Call</b> - ".$method."  ".$resource_name." -- ".$url;
-      krumo($return);
-    }
-    
-    return $return;
-*/
 } // end class
-
 ?>
